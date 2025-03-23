@@ -70,44 +70,6 @@ public final class Controller {
   private Key key = new Key(128);
 
   /***
-    Selects the button that is clicked and unselects all others.
-    Updates the wanted keyLength accordingly
-   * @param e event - pressing any of the 3 radio buttons
-   */
-  public void manageSizeButtons(ActionEvent e) {
-    RadioButton[] sizeRadioButtons = {size128, size192, size256};
-    RadioButton pressed = (RadioButton) e.getSource();
-
-    switch(pressed.getId()) {
-      case "size128":
-        key.length = 128;
-        break;
-      case "size192":
-        key.length = 192;
-        break;
-      case "size256":
-        key.length = 256;
-        break;
-    }
-    for (RadioButton button: sizeRadioButtons) {
-      if (!button.equals(pressed)) {
-        button.setSelected(false);
-      }
-    }
-  }
-
-  public void manageSelectionButtons(ActionEvent e) {
-    RadioButton pressed = (RadioButton) e.getSource();
-    if (pressed == usingFilesBtn) {
-      defaultOutputSelection = true;
-      usingWindowsBtn.setSelected(false);
-    } else {
-      defaultOutputSelection = false;
-      usingFilesBtn.setSelected(false);
-    }
-  }
-
-  /***
    * creates and saves key information based on user selection
    * @param e clicking the 'generate key' button
    */
@@ -116,36 +78,6 @@ public final class Controller {
   }
 
   //TODO:
-
-  /**
-   * reloads the key to match the one in keyGenArea
-   * @param e changing the keyGenArea
-   */
-  public void reloadKey(MouseEvent e) {
-    final int keyHexaLength = keyGenArea.getLength();
-
-    if(keyHexaLength == 32 || keyHexaLength == 48 || keyHexaLength == 64) {
-
-      switch(keyHexaLength) {
-        case 32:
-          size128.setSelected(true);
-          manageSizeButtons(new ActionEvent(size128, null));
-          break;
-        case 48:
-          size192.setSelected(true);
-          manageSizeButtons(new ActionEvent(size192, null));
-          break;
-        case 64:
-          size256.setSelected(true);
-          manageSizeButtons(new ActionEvent(size256, null));
-          break;
-      }
-      String text = keyGenArea.getText();
-      updateKeyBasedOn(text);
-      } else {
-        key.isValid = false;
-      }
-  }
 
   /**
    * Updates key based on the string in keyGenArea

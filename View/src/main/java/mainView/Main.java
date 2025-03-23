@@ -18,8 +18,6 @@ public final class Main extends Application {
   public void start(Stage stage) throws Exception {
     Parent root = FXMLLoader.load(getClass().getResource("/fxml/main.fxml"));
     Scene scene = new Scene(root, Color.BISQUE);
-    //Image icon = new Image(getClass().getResource("/images/sudoku.png").toExternalForm());
-    //stage.getIcons().add(icon);
 
     stage.setTitle("AES Algorithm example");
     stage.setResizable(false);

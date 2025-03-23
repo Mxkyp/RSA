@@ -7,6 +7,9 @@
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.paint.RadialGradient?>
+<?import javafx.scene.paint.Stop?>
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
@@ -16,29 +19,44 @@
       <Cursor fx:constant="DEFAULT" />
    </cursor>
    <children>
-      <RadioButton fx:id="size128" layoutX="108.0" layoutY="234.0" mnemonicParsing="false" onAction="#manageSizeButtons" selected="true" text="128" />
-      <RadioButton fx:id="size192" layoutX="162.0" layoutY="234.0" mnemonicParsing="false" onAction="#manageSizeButtons" text="192" />
-      <RadioButton fx:id="size256" layoutX="215.0" layoutY="234.0" mnemonicParsing="false" onAction="#manageSizeButtons" text="256" />
-      <Button fx:id="genKey" layoutX="136.0" layoutY="261.0" mnemonicParsing="false" onAction="#createKey" text="Generate key" />
-      <Button fx:id="loadKeyBtn" layoutX="407.0" layoutY="237.0" mnemonicParsing="false" onAction="#loadKeyFile" text="Load key from a file" />
-      <Button fx:id="saveKeyBtn" layoutX="587.0" layoutY="237.0" mnemonicParsing="false" onAction="#saveKeyFile" text="save key to a file" />
       <Separator layoutY="296.0" prefHeight="0.0" prefWidth="720.0" />
       <Separator layoutX="5.0" layoutY="54.0" prefHeight="0.0" prefWidth="720.0" />
-      <Text fx:id="KeyHeader1" layoutX="197.0" layoutY="37.0" strokeType="OUTSIDE" strokeWidth="0.0" text="AES ALGORITHM EXAMPLE" underline="true">
+      <Text fx:id="KeyHeader1" layoutX="193.0" layoutY="36.0" strokeType="OUTSIDE" strokeWidth="0.0" text="RSA ALGORITHM EXAMPLE">
          <font>
-            <Font name="Bell MT" size="24.0" />
+            <Font name="Book Antiqua" size="24.0" />
+         </font>
+         <fill>
+            <RadialGradient centerX="0.5036900228239953" centerY="0.5" radius="0.6984732678828349">
+               <stops>
+                  <Stop>
+                     <color>
+                        <Color red="0.9200000166893005" green="0.691925585269928" blue="0.1656000018119812" />
+                     </color>
+                  </Stop>
+                  <Stop offset="0.006711409395973154">
+                     <color>
+                        <Color red="0.9200000166893005" green="0.691925585269928" blue="0.1656000018119812" />
+                     </color>
+                  </Stop>
+                  <Stop offset="0.9977628635346757">
+                     <color>
+                        <Color red="0.11999999731779099" green="0.13488371670246124" blue="1.0" />
+                     </color>
+                  </Stop>
+                  <Stop offset="1.0">
+                     <color>
+                        <Color red="0.11999999731779099" green="0.13488371670246124" blue="1.0" />
+                     </color>
+                  </Stop>
+               </stops>
+            </RadialGradient>
+         </fill>
+      </Text>
+      <Text fx:id="KeyHeader" layoutX="74.0" layoutY="95.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Key:">
+         <font>
+            <Font name="Book Antiqua Italic" size="24.0" />
          </font>
       </Text>
-      <Separator layoutX="357.0" layoutY="87.0" orientation="VERTICAL" prefHeight="209.0" prefWidth="0.0" />
-      <Text fx:id="KeyHeader" layoutX="338.0" layoutY="77.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Key">
-         <font>
-            <Font name="Bell MT" size="24.0" />
-         </font>
-      </Text>
-      <TextArea fx:id="keyGenArea" layoutX="83.0" layoutY="62.0" maxWidth="-Infinity" onMouseExited="#reloadKey" prefHeight="165.0" prefWidth="192.0" wrapText="true" />
-      <Text layoutX="60.0" layoutY="247.0" strokeType="OUTSIDE" strokeWidth="0.0" text="size:" />
-      <TextArea fx:id="keyLoadArea" layoutX="387.0" layoutY="78.0" prefHeight="134.0" prefWidth="161.0" wrapText="true" />
-      <TextArea fx:id="keySaveArea" layoutX="558.0" layoutY="78.0" prefHeight="134.0" prefWidth="161.0" wrapText="true" />
       <Text fx:id="KeyHeader2" layoutX="264.0" layoutY="334.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Encrypt / Decrypt">
          <font>
             <Font name="Bell MT" size="24.0" />
@@ -91,8 +109,27 @@
       </Text>
       <TextField fx:id="saveEncryptedField" layoutX="435.0" layoutY="690.0" />
       <Button fx:id="saveEncryptedBtn" layoutX="601.0" layoutY="690.0" mnemonicParsing="false" onAction="#saveEncryptedFile" text="save" />
-      <RadioButton fx:id="usingFilesBtn" layoutX="334.0" layoutY="650.0" mnemonicParsing="false" onAction="#manageSelectionButtons" selected="true" text="File" />
-      <RadioButton fx:id="usingWindowsBtn" layoutX="325.0" layoutY="681.0" mnemonicParsing="false" onAction="#manageSelectionButtons" text="window" />
       <Separator layoutX="351.0" layoutY="715.0" orientation="VERTICAL" prefHeight="83.0" prefWidth="6.0" />
+      <TextField fx:id="pubKeyGenField" layoutX="198.0" layoutY="113.0" prefHeight="25.0" prefWidth="472.0" />
+      <TextField fx:id="privKeyGenField" layoutX="199.0" layoutY="148.0" prefHeight="25.0" prefWidth="472.0" />
+      <TextField fx:id="modNKeyField" layoutX="198.0" layoutY="183.0" prefHeight="25.0" prefWidth="472.0" />
+      <Text layoutX="53.0" layoutY="132.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Public key e" wrappingWidth="128.818359375">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Text>
+      <Text layoutX="53.0" layoutY="168.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Private key d" wrappingWidth="128.818359375">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Text>
+      <Text layoutX="53.0" layoutY="203.0" strokeType="OUTSIDE" strokeWidth="0.0" text="MOD N" wrappingWidth="128.818359375">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Text>
+      <Button fx:id="keyGenBtn" layoutX="48.0" layoutY="219.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="129.0" text="generate key" />
+      <Button fx:id="keySaveBtn" layoutX="397.0" layoutY="219.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="129.0" text="save key" />
+      <Button fx:id="keyLoadBtn" layoutX="536.0" layoutY="219.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="129.0" text="load key" />
    </children>
 </AnchorPane>
