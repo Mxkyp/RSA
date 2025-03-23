@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.sudoku</groupId>
+        <artifactId>main.AES</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <developers>
+        <developer>
+            <id>258681</id>
+            <name>Mikolaj Pawlos</name>
+            <organization>Politechnika Lodzka</organization>
+        </developer>
+        <developer>
+            <id>252496</id>
+            <name>Mikita Karabeika</name>
+            <organization>Politechnika Lodzka</organization>
+        </developer>
+    </developers>
+
+    <artifactId>View</artifactId>
+    <packaging>jar</packaging>
+
+    <properties>
+        <maven.compiler.source>23</maven.compiler.source>
+        <maven.compiler.target>23</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-maven-plugin</artifactId>
+                <version>0.0.8</version>
+                <configuration>
+                    <mainClass>main.main.Main</mainClass>
+                </configuration>
+            </plugin>
+            <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-shade-plugin</artifactId>
+            <executions>
+                <execution>
+                    <goals>
+                        <goal>shade</goal>
+                    </goals>
+                    <configuration>
+                        <shadedArtifactAttached>true</shadedArtifactAttached>
+                        <transformers>
+                            <transformer implementation=
+                                                 "org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                <mainClass>mainView.MainRunner</mainClass>
+                            </transformer>
+                        </transformers>
+                    </configuration>
+                </execution>
+            </executions>
+        </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-controls</artifactId>
+            <version>25-ea+2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-graphics</artifactId>
+            <version>25-ea+2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-fxml</artifactId>
+            <version>25-ea+2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-base</artifactId>
+            <version>25-ea+2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.sudoku</groupId>
+            <artifactId>Logic</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
+
+</project>

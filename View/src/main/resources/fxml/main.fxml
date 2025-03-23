@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane fx:id="mainMenu" prefHeight="800.0" prefWidth="720.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mainView.Controller">
+   <cursor>
+      <Cursor fx:constant="DEFAULT" />
+   </cursor>
+   <children>
+      <RadioButton fx:id="size128" layoutX="108.0" layoutY="234.0" mnemonicParsing="false" onAction="#manageSizeButtons" selected="true" text="128" />
+      <RadioButton fx:id="size192" layoutX="162.0" layoutY="234.0" mnemonicParsing="false" onAction="#manageSizeButtons" text="192" />
+      <RadioButton fx:id="size256" layoutX="215.0" layoutY="234.0" mnemonicParsing="false" onAction="#manageSizeButtons" text="256" />
+      <Button fx:id="genKey" layoutX="136.0" layoutY="261.0" mnemonicParsing="false" onAction="#createKey" text="Generate key" />
+      <Button fx:id="loadKeyBtn" layoutX="407.0" layoutY="237.0" mnemonicParsing="false" onAction="#loadKeyFile" text="Load key from a file" />
+      <Button fx:id="saveKeyBtn" layoutX="587.0" layoutY="237.0" mnemonicParsing="false" onAction="#saveKeyFile" text="save key to a file" />
+      <Separator layoutY="296.0" prefHeight="0.0" prefWidth="720.0" />
+      <Separator layoutX="5.0" layoutY="54.0" prefHeight="0.0" prefWidth="720.0" />
+      <Text fx:id="KeyHeader1" layoutX="197.0" layoutY="37.0" strokeType="OUTSIDE" strokeWidth="0.0" text="AES ALGORITHM EXAMPLE" underline="true">
+         <font>
+            <Font name="Bell MT" size="24.0" />
+         </font>
+      </Text>
+      <Separator layoutX="357.0" layoutY="87.0" orientation="VERTICAL" prefHeight="209.0" prefWidth="0.0" />
+      <Text fx:id="KeyHeader" layoutX="338.0" layoutY="77.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Key">
+         <font>
+            <Font name="Bell MT" size="24.0" />
+         </font>
+      </Text>
+      <TextArea fx:id="keyGenArea" layoutX="83.0" layoutY="62.0" maxWidth="-Infinity" onMouseExited="#reloadKey" prefHeight="165.0" prefWidth="192.0" wrapText="true" />
+      <Text layoutX="60.0" layoutY="247.0" strokeType="OUTSIDE" strokeWidth="0.0" text="size:" />
+      <TextArea fx:id="keyLoadArea" layoutX="387.0" layoutY="78.0" prefHeight="134.0" prefWidth="161.0" wrapText="true" />
+      <TextArea fx:id="keySaveArea" layoutX="558.0" layoutY="78.0" prefHeight="134.0" prefWidth="161.0" wrapText="true" />
+      <Text fx:id="KeyHeader2" layoutX="264.0" layoutY="334.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Encrypt / Decrypt">
+         <font>
+            <Font name="Bell MT" size="24.0" />
+         </font>
+      </Text>
+      <Separator layoutX="354.0" layoutY="368.0" orientation="VERTICAL" prefHeight="269.0" prefWidth="6.0" />
+      <Text fx:id="KeyHeader21" layoutX="62.0" layoutY="360.0" strokeType="OUTSIDE" strokeWidth="0.0" text="open a unencrypted file:">
+         <font>
+            <Font name="Bell MT" size="18.0" />
+         </font>
+      </Text>
+      <TextField fx:id="openUnencryptedField" layoutX="74.0" layoutY="369.0" />
+      <Button fx:id="openUnencryptedBtn" layoutX="241.0" layoutY="369.0" mnemonicParsing="false" onAction="#loadUnencryptedFile" text="open" />
+      <Text fx:id="KeyHeader211" layoutX="454.0" layoutY="359.0" strokeType="OUTSIDE" strokeWidth="0.0" text="open a encrypted file:">
+         <font>
+            <Font name="Bell MT" size="18.0" />
+         </font>
+      </Text>
+      <TextField fx:id="openEncryptedField" layoutX="454.0" layoutY="370.0" />
+      <Button fx:id="openEncryptedBtn" layoutX="619.0" layoutY="370.0" mnemonicParsing="false" onAction="#loadEncryptedFile" text="open" />
+      <TextArea fx:id="unencryptedTextArea" layoutX="62.0" layoutY="427.0" prefHeight="200.0" prefWidth="200.0" wrapText="true" />
+      <TextArea fx:id="encryptedTextArea" layoutX="429.0" layoutY="427.0" prefHeight="200.0" prefWidth="200.0" wrapText="true" />
+      <Button fx:id="encryptBtn" alignment="TOP_CENTER" contentDisplay="TOP" layoutX="311.0" layoutY="427.0" mnemonicParsing="false" onAction="#encrypt" prefHeight="83.0" prefWidth="86.0" text="encrypt">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Button>
+      <Line endX="-8.333358764648438" layoutX="379.0" layoutY="480.0" startX="-46.333343505859375" />
+      <Line endX="12.166641235351562" endY="29.5" layoutX="359.0" layoutY="450.0" startX="2.000030517578125" startY="19.99993896484375" />
+      <Line endX="13.166641235351562" endY="-2.5" layoutX="358.0" layoutY="483.0" startX="3.000030517578125" startY="7.6666259765625" />
+      <Button fx:id="decryptBtn" alignment="TOP_CENTER" contentDisplay="TOP" layoutX="311.0" layoutY="543.0" mnemonicParsing="false" onAction="#decrypt" prefHeight="83.0" prefWidth="86.0" text="decrypt">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Button>
+      <Line endX="-8.333358764648438" layoutX="379.0" layoutY="596.0" startX="-46.333343505859375" />
+      <Line endX="-12.666656494140625" endY="6.99993896484375" layoutX="358.0" layoutY="599.0" startX="-25.333343505859375" startY="-2.3333740234375" />
+      <Line endX="-24.999969482421875" endY="115.6666259765625" layoutX="371.0" layoutY="471.0" startX="-37.666656494140625" startY="124.333251953125" />
+      <Text fx:id="KeyHeader212" layoutX="56.0" layoutY="674.0" strokeType="OUTSIDE" strokeWidth="0.0" text="save the unencrypted file:">
+         <font>
+            <Font name="Bell MT" size="18.0" />
+         </font>
+      </Text>
+      <TextField fx:id="saveUnencryptedField" layoutX="68.0" layoutY="688.0" />
+      <Button fx:id="saveUnencryptedBtn" layoutX="234.0" layoutY="688.0" mnemonicParsing="false" onAction="#saveUnencryptedFile" text="save" />
+      <Text fx:id="KeyHeader2121" layoutX="438.0" layoutY="674.0" strokeType="OUTSIDE" strokeWidth="0.0" text="save the encrypted file:">
+         <font>
+            <Font name="Bell MT" size="18.0" />
+         </font>
+      </Text>
+      <TextField fx:id="saveEncryptedField" layoutX="435.0" layoutY="690.0" />
+      <Button fx:id="saveEncryptedBtn" layoutX="601.0" layoutY="690.0" mnemonicParsing="false" onAction="#saveEncryptedFile" text="save" />
+      <RadioButton fx:id="usingFilesBtn" layoutX="334.0" layoutY="650.0" mnemonicParsing="false" onAction="#manageSelectionButtons" selected="true" text="File" />
+      <RadioButton fx:id="usingWindowsBtn" layoutX="325.0" layoutY="681.0" mnemonicParsing="false" onAction="#manageSelectionButtons" text="window" />
+      <Separator layoutX="351.0" layoutY="715.0" orientation="VERTICAL" prefHeight="83.0" prefWidth="6.0" />
+   </children>
+</AnchorPane>

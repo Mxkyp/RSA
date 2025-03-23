@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <parent>
+    <artifactId>main.AES</artifactId>
+    <groupId>org.sudoku</groupId>
+    <version>1.0-SNAPSHOT</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>View</artifactId>
+  <developers>
+    <developer>
+      <id>258681</id>
+      <name>Mikolaj Pawlos</name>
+      <organization>Politechnika Lodzka</organization>
+    </developer>
+    <developer>
+      <id>252496</id>
+      <name>Mikita Karabeika</name>
+      <organization>Politechnika Lodzka</organization>
+    </developer>
+  </developers>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.openjfx</groupId>
+        <artifactId>javafx-maven-plugin</artifactId>
+        <version>0.0.8</version>
+        <configuration>
+          <mainClass>main.main.Main</mainClass>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-shade-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <shadedArtifactAttached>true</shadedArtifactAttached>
+              <transformers>
+                <transformer>
+                  <mainClass>mainView.MainRunner</mainClass>
+                </transformer>
+              </transformers>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.target>23</maven.compiler.target>
+    <maven.compiler.source>23</maven.compiler.source>
+  </properties>
+</project>

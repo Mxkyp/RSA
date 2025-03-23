@@ -1,0 +1,4 @@
+module Logic {
+
+ exports main;
+}
