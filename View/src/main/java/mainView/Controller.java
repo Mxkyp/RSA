@@ -5,9 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
-import main.RSAKeyGenerator;
-import main.RSAKeyPair;
-import main.Utils;
+import main.*;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -32,7 +30,6 @@ public final class Controller {
 
   //Save elements
   @FXML Button saveKeyBtn;
-  @FXML TextArea keySaveArea;
 
   @FXML TextField saveUnencryptedField;
   @FXML TextField saveEncryptedField;
@@ -41,9 +38,6 @@ public final class Controller {
   @FXML TextField pubKeyGenField;
   @FXML TextField privKeyGenField;
   @FXML TextField modNKeyField;
-
-  @FXML Button genKey;
-  @FXML TextArea keyGenArea;
 
   @FXML Button encryptBtn;
   @FXML Button decryptBtn;
@@ -65,37 +59,19 @@ public final class Controller {
     modNKeyField.setText(keyPair.getPublicKey().getN().toString(16));
   }
 
-  //TODO:
-
-  /**
-   * Updates key based on the string in keyGenArea
-   * @param text string from keyGenArea
-   */
-  /*
-  public void updateKeyBasedOn(String text) {
-    key.isValid = text.matches("^[0-9A-Fa-f]+$");
-
-    if (key.isValid) {
-      byte[] temp = Utils.hexToBytes(text);
-      key.val = new byte[temp.length];
-
-      for (int i = 0; i < temp.length; i++) {
-        key.val[i] = temp[i];
-      }
-
-
-
+  public void manageSelectionButtons(ActionEvent e) {
+    RadioButton pressed = (RadioButton) e.getSource();
+    if (pressed == usingFilesBtn) {
+      defaultOutputSelection = true;
+      usingWindowsBtn.setSelected(false);
+    } else {
+      defaultOutputSelection = false;
+      usingFilesBtn.setSelected(false);
     }
   }
-*/
-  public void encrypt(ActionEvent e) {
-    /*
-    if(!key.isValid){
-      showError("Key is invalid!", "Check whether its a valid hexadecimal string with 32, 48, 64 numbers");
-      return;
-    }
 
-     */
+
+  public void encrypt(ActionEvent e) throws Exception {
 
     if(defaultOutputSelection) {
       encryptBasedOnLoadedFiles();
@@ -119,23 +95,15 @@ public final class Controller {
     encryptedTextArea.appendText(Utils.bytesToHex(encryptedBytes));
   }
 
-  public void encryptBasedOnWindows() {
+  public void encryptBasedOnWindows() throws Exception {
     String text = unencryptedTextArea.getText();
-    byte[] encryptedBytes = null; // TODO:
+    String encrypted = RSAEncryptor.encrypt(text.getBytes(StandardCharsets.UTF_8), keyPair.getPublicKey());
 
     encryptedTextArea.clear();
-    encryptedTextArea.appendText(Utils.bytesToHex(encryptedBytes));
+    encryptedTextArea.appendText(encrypted);
   }
 
-  public void decrypt(ActionEvent e) {
-    /*
-    if(!keyPair.isValid) {
-      showError("Key is invalid!", "Check whether its a valid hexadecimal string with 32, 48, 64 numbers");
-      return;
-    }
-
-     */
-
+  public void decrypt(ActionEvent e) throws Exception {
     if(defaultOutputSelection){
       decryptBasedOnLoadedFiles();
     } else {
@@ -158,23 +126,10 @@ public final class Controller {
     unencryptedTextArea.setText(decryptedText);
   }
 
-  public void decryptBasedOnWindows() {
+  public void decryptBasedOnWindows() throws Exception {
     String text = encryptedTextArea.getText();
-    byte[] encryptedBytes;
 
-    if(text.matches("^[0-9A-Fa-f]+$")) {
-      byte[] temp = Utils.hexToBytes(text);
-      encryptedBytes = new byte[temp.length];
-
-      for (int i = 0; i < temp.length; i++) {
-        encryptedBytes[i] = temp[i];
-      }
-
-    } else {
-      encryptedBytes = text.getBytes(StandardCharsets.UTF_8);
-    }
-
-    byte[] decryptedBytes = null;  //TODO:
+    byte[] decryptedBytes = RSADecryptor.decrypt(text, keyPair.getPrivateKey());  //TODO:
 
     String decryptedText;
     decryptedText = new String(decryptedBytes, StandardCharsets.UTF_8);
@@ -208,7 +163,7 @@ public final class Controller {
   public void saveKeyFile(ActionEvent e) {
     File keyFile = saveFile(e, "file to contain the key");
     if (keyFile != null) {
-      writeToFile(keyFile, keySaveArea);
+      //writeToFile(keyFile, keySaveArea);
     }
   }
 
