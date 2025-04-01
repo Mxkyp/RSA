@@ -5,21 +5,16 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
+import main.RSAKeyGenerator;
+import main.RSAKeyPair;
 import main.Utils;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 
-
-import static main.Utils.*;
-
-
 public final class Controller {
 
   //radio buttons
-  @FXML RadioButton size128;
-  @FXML RadioButton size192;
-  @FXML RadioButton size256;
   @FXML RadioButton usingFilesBtn;
   @FXML RadioButton usingWindowsBtn;
 
@@ -43,6 +38,10 @@ public final class Controller {
   @FXML TextField saveEncryptedField;
 
   //Key gen elements
+  @FXML TextField pubKeyGenField;
+  @FXML TextField privKeyGenField;
+  @FXML TextField modNKeyField;
+
   @FXML Button genKey;
   @FXML TextArea keyGenArea;
 
@@ -53,28 +52,17 @@ public final class Controller {
   private byte[] encryptedWindowBuffer;
   private boolean defaultOutputSelection = true;
 
-  private class Key {
-
-    public Key(int length){
-      this.length = length;
-    }
-
-    public byte[] val;
-    public byte[][] expandedVal;
-    public int Nr;
-    public int Nk;
-    public int length;
-    public boolean isValid;
-  }
-
-  private Key key = new Key(128);
+  private RSAKeyPair keyPair;
 
   /***
    * creates and saves key information based on user selection
    * @param e clicking the 'generate key' button
    */
   public void createKey(ActionEvent e) {
-
+    keyPair = RSAKeyGenerator.generateKeyPair(512);
+    pubKeyGenField.setText(keyPair.getPublicKey().getE().toString(16));
+    privKeyGenField.setText(keyPair.getPrivateKey().getD().toString(16));
+    modNKeyField.setText(keyPair.getPublicKey().getN().toString(16));
   }
 
   //TODO:
@@ -83,11 +71,12 @@ public final class Controller {
    * Updates key based on the string in keyGenArea
    * @param text string from keyGenArea
    */
+  /*
   public void updateKeyBasedOn(String text) {
     key.isValid = text.matches("^[0-9A-Fa-f]+$");
 
     if (key.isValid) {
-      Byte[] temp = Utils.hexToBytes(text);
+      byte[] temp = Utils.hexToBytes(text);
       key.val = new byte[temp.length];
 
       for (int i = 0; i < temp.length; i++) {
@@ -98,12 +87,15 @@ public final class Controller {
 
     }
   }
-
+*/
   public void encrypt(ActionEvent e) {
+    /*
     if(!key.isValid){
       showError("Key is invalid!", "Check whether its a valid hexadecimal string with 32, 48, 64 numbers");
       return;
     }
+
+     */
 
     if(defaultOutputSelection) {
       encryptBasedOnLoadedFiles();
@@ -119,7 +111,6 @@ public final class Controller {
       return;
     }
 
-    byte[] paddedInput = padPKCS7(unencryptedWindowBuffer, 16);
     byte[] encryptedBytes = null; // TODO:
 
     encryptedWindowBuffer = encryptedBytes;
@@ -130,7 +121,6 @@ public final class Controller {
 
   public void encryptBasedOnWindows() {
     String text = unencryptedTextArea.getText();
-    byte[] paddedInput = padPKCS7(text.getBytes(StandardCharsets.UTF_8), 16);
     byte[] encryptedBytes = null; // TODO:
 
     encryptedTextArea.clear();
@@ -138,11 +128,13 @@ public final class Controller {
   }
 
   public void decrypt(ActionEvent e) {
-    System.out.println(Utils.bytesToHex(key.val));
-    if(!key.isValid) {
+    /*
+    if(!keyPair.isValid) {
       showError("Key is invalid!", "Check whether its a valid hexadecimal string with 32, 48, 64 numbers");
       return;
     }
+
+     */
 
     if(defaultOutputSelection){
       decryptBasedOnLoadedFiles();
@@ -158,18 +150,9 @@ public final class Controller {
     }
     byte[] decryptedBytes = null;
 
-    // Remove PKCS7 padding (if possible) and convert back to a readable string
     String decryptedText;
-    try {
-      decryptedText = new String(removePKCS7Padding(decryptedBytes), StandardCharsets.UTF_8);
-    } catch (IllegalArgumentException ex) {
-      decryptedText = new String(decryptedBytes, StandardCharsets.UTF_8);
-    }
-    try {
-      unencryptedWindowBuffer = removePKCS7Padding(decryptedBytes);
-    } catch (IllegalArgumentException ex) {
-      unencryptedWindowBuffer = decryptedBytes;
-    }
+    decryptedText = new String(decryptedBytes, StandardCharsets.UTF_8);
+    unencryptedWindowBuffer = decryptedBytes;
 
     unencryptedTextArea.clear();
     unencryptedTextArea.setText(decryptedText);
@@ -180,7 +163,7 @@ public final class Controller {
     byte[] encryptedBytes;
 
     if(text.matches("^[0-9A-Fa-f]+$")) {
-      Byte[] temp = Utils.hexToBytes(text);
+      byte[] temp = Utils.hexToBytes(text);
       encryptedBytes = new byte[temp.length];
 
       for (int i = 0; i < temp.length; i++) {
@@ -194,11 +177,7 @@ public final class Controller {
     byte[] decryptedBytes = null;  //TODO:
 
     String decryptedText;
-    try {
-      decryptedText = new String(removePKCS7Padding(decryptedBytes), StandardCharsets.UTF_8);
-    } catch (IllegalArgumentException ex) {
-      decryptedText = new String(decryptedBytes, StandardCharsets.UTF_8);
-    }
+    decryptedText = new String(decryptedBytes, StandardCharsets.UTF_8);
 
     unencryptedTextArea.clear();
     unencryptedTextArea.setText(decryptedText);
