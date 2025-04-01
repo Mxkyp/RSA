@@ -131,7 +131,7 @@
       <Button fx:id="keyGenBtn" layoutX="48.0" layoutY="219.0" mnemonicParsing="false" onAction="#createKey" prefHeight="25.0" prefWidth="129.0" text="generate key" />
       <Button fx:id="keySaveBtn" layoutX="397.0" layoutY="219.0" mnemonicParsing="false" onAction="#saveKeyFile" prefHeight="25.0" prefWidth="129.0" text="save key" />
       <Button fx:id="keyLoadBtn" layoutX="536.0" layoutY="219.0" mnemonicParsing="false" onAction="#loadKeyFile" prefHeight="25.0" prefWidth="129.0" text="load key" />
-      <RadioButton fx:id="usingFilesBtn" layoutX="337.0" layoutY="650.0" mnemonicParsing="false" onAction="#manageSelectionButtons" text="file" />
+      <RadioButton fx:id="usingFilesBtn" layoutX="337.0" layoutY="650.0" mnemonicParsing="false" onAction="#manageSelectionButtons" selected="true" text="file" />
       <RadioButton fx:id="usingWindowsBtn" layoutX="323.0" layoutY="681.0" mnemonicParsing="false" onAction="#manageSelectionButtons" text="window" />
    </children>
 </AnchorPane>
