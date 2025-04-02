@@ -129,7 +129,7 @@ public final class Controller {
   public void decryptBasedOnWindows() throws Exception {
     String text = encryptedTextArea.getText();
 
-    byte[] decryptedBytes = RSADecryptor.decrypt(text, keyPair.getPrivateKey());  //TODO:
+    byte[] decryptedBytes = RSADecryptor.decryptMessage(text, keyPair.getPrivateKey());  //TODO:
 
     String decryptedText;
     decryptedText = new String(decryptedBytes, StandardCharsets.UTF_8);
