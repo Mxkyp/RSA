@@ -27,4 +27,32 @@ public class Utils {
           }
           return data;
       }
+
+    public static void appendBytes(ArrayList<Byte> decryptedBytes, byte[] buff, final int n) {
+      for(int i = 0; i < n ; i++) {
+        decryptedBytes.add(buff[i]);
+      }
+    }
+
+    public static byte[] getSimpleByteArray(ArrayList<Byte> array){
+      byte[] arr = new byte[array.size()];
+      for(int i = 0; i < array.size(); i++) {
+        arr[i] = array.removeFirst();
+      }
+
+      return arr;
+    }
+
+
+  public static byte[] fixBlockSize(byte[] chunk, int expectedSize) {
+    if (chunk.length > expectedSize) {
+      // Trim leading zero if the block is too large
+      int offset = chunk.length - expectedSize;
+      byte[] trimmed = new byte[expectedSize];
+      System.arraycopy(chunk, offset, trimmed, 0, expectedSize);
+      chunk = trimmed;
+    }
+    return chunk;
+  }
+
   }
