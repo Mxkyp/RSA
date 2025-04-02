@@ -28,17 +28,15 @@ public class RSADecryptor {
     }
 
     public static byte[] decryptMessage(byte[] encryptedBytes, RSAPrivateKey privateKey) throws Exception {
-        ArrayList<Byte> decryptedBytes = new ArrayList<>(encryptedBytes.length);
         ByteArrayInputStream encrypedData = new ByteArrayInputStream(encryptedBytes);
+        ArrayList<Byte> unencrypted = new ArrayList<>(encryptedBytes.length);
         byte[] buff = new byte[64];
         int n = 0;
         while((n = encrypedData.readNBytes(buff,0,64)) > 0) {
-            byte[] decryptedChunk = decrypt(buff, privateKey);
-            //decryptedChunk = fixBlockSize(decryptedChunk, 64);
-            System.out.println(decryptedChunk.length);
-            appendBytes(decryptedBytes, decryptedChunk, decryptedChunk.length);
+            byte[] unpaddedMessage = removePKCS1v15Padding(decrypt(buff, privateKey));
+            appendBytes(unencrypted, unpaddedMessage, unpaddedMessage.length);
         }
-        return getSimpleByteArray(decryptedBytes);
+        return getSimpleByteArray(unencrypted);
     }
 
 }
