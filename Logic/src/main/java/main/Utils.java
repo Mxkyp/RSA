@@ -50,50 +50,63 @@ public class Utils {
   // Method to manually apply PKCS#1 v1.5 padding to a message
   public static byte[] applyPKCS1v15Padding(byte[] message, int keySize) {
     int messageLength = message.length;
-    int paddingLength = keySize - messageLength - 3;
+    // We need an extra byte for the separator (0x00) so the padding length calculation changes:
+    int paddingLength = keySize - messageLength - 3;  // 3 bytes: 0x00, 0x02, and the separator 0x00
+
     if (paddingLength < 8) {
-      //throw new IllegalArgumentException("Message is too large for the RSA key size.");
+      throw new IllegalArgumentException("Message is too large for the RSA key size.");
     }
 
-    // 0x00 0x02 (Padding header)
     byte[] padding = new byte[paddingLength];
-
-    // Fill padding with non-zero random bytes
+    SecureRandom random = new SecureRandom();
     random.nextBytes(padding);
     for (int i = 0; i < padding.length; i++) {
       if (padding[i] == 0) {
-        padding[i] = (byte) 0x01;  // Ensure that padding does not contain 0x00 bytes
+        padding[i] = (byte) 0x01;
       }
     }
 
-    // Combine padding header, padding, and message
     byte[] paddedMessage = new byte[keySize];
-    paddedMessage[0] = 0x00;  // First byte (0x00)
-    paddedMessage[1] = 0x02;  // Second byte (0x02)
+    paddedMessage[0] = 0x00;      // First byte: 0x00
+    paddedMessage[1] = 0x02;      // Second byte: 0x02
 
-    // Copy the padding into the array
-    System.arraycopy(padding, 0, paddedMessage, 2, padding.length);
+    // Copy the padding bytes
+    System.arraycopy(padding, 0, paddedMessage, 2, paddingLength);
 
-    // Copy the message at the end
-    System.arraycopy(message, 0, paddedMessage, 2 + padding.length, message.length);
+    // Insert the separator 0x00
+    paddedMessage[2 + paddingLength] = 0x00;
+
+    // Copy the message after the separator
+    System.arraycopy(message, 0, paddedMessage, 3 + paddingLength, messageLength);
 
     return paddedMessage;
   }
 
   // Method to manually remove PKCS#1 v1.5 padding from a message
   public static byte[] removePKCS1v15Padding(byte[] paddedMessage) {
+    // Check for null and minimum length (at least 11 bytes: 2 header + 8 padding + 1 separator)
+    if (paddedMessage == null || paddedMessage.length < 11) {
+      throw new IllegalArgumentException("Invalid padded message: too short");
+    }
+
+    // Verify the header bytes
     if (paddedMessage[0] != 0x00 || paddedMessage[1] != 0x02) {
       throw new IllegalArgumentException("Invalid PKCS#1 v1.5 padding");
     }
 
+    // Find the 0x00 separator while ensuring we don't go out of bounds
     int paddingStartIndex = 2;
-    while (paddedMessage[paddingStartIndex] != 0x00) {
+    while (paddingStartIndex < paddedMessage.length && paddedMessage[paddingStartIndex] != 0x00) {
       paddingStartIndex++;
     }
 
-    // The actual message starts after the padding and the 0x00 separator
-    byte[] message = Arrays.copyOfRange(paddedMessage, paddingStartIndex + 1, paddedMessage.length);
-    return message;
+    // If no 0x00 was found or if padding is too short
+    if (paddingStartIndex == paddedMessage.length || paddingStartIndex < 10) { // must have at least 8 padding bytes
+      throw new IllegalArgumentException("Invalid PKCS#1 v1.5 padding structure");
+    }
+
+    // The actual message starts after the 0x00 separator
+    return Arrays.copyOfRange(paddedMessage, paddingStartIndex + 1, paddedMessage.length);
   }
 
 

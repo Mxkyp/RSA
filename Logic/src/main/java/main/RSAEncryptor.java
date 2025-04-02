@@ -15,17 +15,19 @@ public class RSAEncryptor {
         }
 
         BigInteger c = m.modPow(publicKey.getE(), publicKey.getN());
+        System.out.println(c.toByteArray().length);
         return Utils.bytesToHex(c.toByteArray());
     }
 
     public static String encryptMessage(byte[] message, RSAPublicKey publicKey) throws Exception {
         StringBuilder encryptedMessage = new StringBuilder(2 * message.length);
         ByteArrayInputStream inStream = new ByteArrayInputStream(message);
-       byte[] buff = new byte[63];
+       byte[] buff = new byte[32];
        int n = 0;
        while((n = inStream.readNBytes(buff,0, 32)) > 0) {
-           byte[] chunk = Arrays.copyOf(buff, n);
-           chunk = applyPKCS1v15Padding(chunk, 63);
+           byte[] chunkOG = Arrays.copyOf(buff, n);
+           byte[] chunk = applyPKCS1v15Padding(chunkOG, 64);
+           System.out.print(Utils.bytesToHex(chunk) + " ");
            encryptedMessage.append(encrypt(chunk, publicKey));
        }
        return encryptedMessage.toString();

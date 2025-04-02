@@ -5,28 +5,23 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
 
-/*
         try {
             Scanner scanner = new Scanner(System.in);
 
-            System.out.println("Enter key size (512, 1024, 2048, 4096): ");
-            int keySize = scanner.nextInt();
-            scanner.nextLine();
 
-            RSAKeyPair keyPair = RSAKeyGenerator.generateKeyPair(keySize);
+            RSAKeyPair keyPair = RSAKeyGenerator.generateKeyPair(512);
 
-            System.out.println("\nRSA KEYS (" + keySize + " bit)");
+            System.out.println("\nRSA KEYS (" + 512 + " bit)");
             System.out.println("Public key e: " + keyPair.getPublicKey().getE().toString(16));
             System.out.println("Private key d: " + keyPair.getPrivateKey().getD().toString(16));
             System.out.println("MOD N: " + keyPair.getPublicKey().getN().toString(16));
 
-            System.out.println("\nEnter message: ");
-            String message = scanner.nextLine();
+            String message = "FTIMS IV C1 BA/3 your course id:NPEM-HTRFdon't transfer grades";
 
-            String encrypted = RSAEncryptor.encrypt(message.getBytes(), keyPair.getPublicKey());
+            String encrypted = RSAEncryptor.encryptMessage(message.getBytes(), keyPair.getPublicKey());
             System.out.println("Encrypted message (HEX): " + encrypted);
 
-            byte[] decrypted = RSADecryptor.decrypt(encrypted, keyPair.getPrivateKey());
+            byte[] decrypted = RSADecryptor.decryptMessage(encrypted, keyPair.getPrivateKey());
             String decryptedMessage = new String(decrypted);
             System.out.println("Decrypted message: " + decryptedMessage);
 
@@ -34,6 +29,5 @@ public class Main {
             System.err.println("Error: " + e.getMessage());
             e.printStackTrace();
         }
-*/
     }
 }
