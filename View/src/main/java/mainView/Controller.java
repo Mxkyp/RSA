@@ -82,13 +82,13 @@ public final class Controller {
 
   }
 
-  public void encryptBasedOnLoadedFiles() {
+  public void encryptBasedOnLoadedFiles() throws Exception {
     if(unencryptedWindowBuffer == null) {
       showError("Load a unencrypted file!", "No file was loaded");
       return;
     }
 
-    byte[] encryptedBytes = null; // TODO:
+    byte[] encryptedBytes = RSAEncryptor.encryptMessage(unencryptedWindowBuffer, keyPair.getPublicKey());
 
     encryptedWindowBuffer = encryptedBytes;
 
@@ -98,7 +98,7 @@ public final class Controller {
 
   public void encryptBasedOnWindows() throws Exception {
     String text = unencryptedTextArea.getText();
-    String encrypted = RSAEncryptor.encryptMessage(text.getBytes(StandardCharsets.UTF_8), keyPair.getPublicKey());
+    String encrypted = Utils.bytesToHex(RSAEncryptor.encryptMessage(text.getBytes(StandardCharsets.UTF_8), keyPair.getPublicKey()));
 
     encryptedTextArea.clear();
     encryptedTextArea.appendText(encrypted);
@@ -112,12 +112,13 @@ public final class Controller {
     }
   }
 
-  public void decryptBasedOnLoadedFiles() {
+  public void decryptBasedOnLoadedFiles() throws Exception {
     if(encryptedWindowBuffer == null) {
       showError("Load a encrypted file!", "No file was loaded");
       return;
     }
-    byte[] decryptedBytes = null;
+
+    byte[] decryptedBytes = RSADecryptor.decryptMessage(encryptedWindowBuffer, keyPair.getPrivateKey());
 
     String decryptedText;
     decryptedText = new String(decryptedBytes, StandardCharsets.UTF_8);

@@ -47,67 +47,52 @@ public class Utils {
     }
 
 
-  // Method to manually apply PKCS#1 v1.5 padding to a message
-  public static byte[] applyPKCS1v15Padding(byte[] message, int keySize) {
-    int messageLength = message.length;
-    // We need an extra byte for the separator (0x00) so the padding length calculation changes:
-    int paddingLength = keySize - messageLength - 3;  // 3 bytes: 0x00, 0x02, and the separator 0x00
-
-    if (paddingLength < 8) {
-      throw new IllegalArgumentException("Message is too large for the RSA key size.");
+  public static byte[] addPKCS1Padding(byte[] message, int blockSize) throws Exception {
+    if (message.length > blockSize - 11) {
+      throw new Exception("Message too long for RSA encryption");
     }
-
-    byte[] padding = new byte[paddingLength];
+    byte[] padded = new byte[blockSize];
+    padded[0] = 0x00;
+    padded[1] = 0x02;
     SecureRandom random = new SecureRandom();
-    random.nextBytes(padding);
-    for (int i = 0; i < padding.length; i++) {
-      if (padding[i] == 0) {
-        padding[i] = (byte) 0x01;
+    int padLength = blockSize - message.length - 3;
+    // Fill with nonzero random bytes
+    for (int i = 0; i < padLength; i++) {
+      byte rand = 0;
+      while (rand == 0) {
+        rand = (byte) random.nextInt(256);
+      }
+      padded[i + 2] = rand;
+    }
+    padded[2 + padLength] = 0x00; // Padding delimiter
+    System.arraycopy(message, 0, padded, 3 + padLength, message.length);
+    return padded;
+  }
+
+  /**
+   * Removes PKCS#1 v1.5 padding from a decrypted block.
+   */
+  public static byte[] removePKCS1Padding(byte[] padded) throws Exception {
+    // Check the padding header
+    /*
+    if (padded[0] != 0x00 || padded[1] != 0x02) {
+      throw new Exception("Invalid PKCS#1 padding");
+    }
+    */
+    // Find the zero delimiter marking the end of the padding
+    int index = -1;
+    for (int i = 2; i < padded.length; i++) {
+      if (padded[i] == 0x00) {
+        index = i;
+        break;
       }
     }
-
-    byte[] paddedMessage = new byte[keySize];
-    paddedMessage[0] = 0x00;      // First byte: 0x00
-    paddedMessage[1] = 0x02;      // Second byte: 0x02
-
-    // Copy the padding bytes
-    System.arraycopy(padding, 0, paddedMessage, 2, paddingLength);
-
-    // Insert the separator 0x00
-    paddedMessage[2 + paddingLength] = 0x00;
-
-    // Copy the message after the separator
-    System.arraycopy(message, 0, paddedMessage, 3 + paddingLength, messageLength);
-
-    return paddedMessage;
+    if (index < 0) {
+      throw new Exception("Invalid PKCS#1 padding: no delimiter found");
+    }
+    int messageLength = padded.length - index - 1;
+    byte[] message = new byte[messageLength];
+    System.arraycopy(padded, index + 1, message, 0, messageLength);
+    return message;
   }
-
-  // Method to manually remove PKCS#1 v1.5 padding from a message
-  public static byte[] removePKCS1v15Padding(byte[] paddedMessage) {
-    // Check for null and minimum length (at least 11 bytes: 2 header + 8 padding + 1 separator)
-    if (paddedMessage == null || paddedMessage.length < 11) {
-      throw new IllegalArgumentException("Invalid padded message: too short");
-    }
-
-    // Verify the header bytes
-    if (paddedMessage[0] != 0x00 || paddedMessage[1] != 0x02) {
-      throw new IllegalArgumentException("Invalid PKCS#1 v1.5 padding");
-    }
-
-    // Find the 0x00 separator while ensuring we don't go out of bounds
-    int paddingStartIndex = 2;
-    while (paddingStartIndex < paddedMessage.length && paddedMessage[paddingStartIndex] != 0x00) {
-      paddingStartIndex++;
-    }
-
-    // If no 0x00 was found or if padding is too short
-    if (paddingStartIndex == paddedMessage.length || paddingStartIndex < 10) { // must have at least 8 padding bytes
-      throw new IllegalArgumentException("Invalid PKCS#1 v1.5 padding structure");
-    }
-
-    // The actual message starts after the 0x00 separator
-    return Arrays.copyOfRange(paddedMessage, paddingStartIndex + 1, paddedMessage.length);
-  }
-
-
   }
