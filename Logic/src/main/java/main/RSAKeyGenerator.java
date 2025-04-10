@@ -18,7 +18,7 @@ public class RSAKeyGenerator {
         BigInteger n = p.multiply(q);
         BigInteger phi = p.subtract(BigInteger.ONE).multiply(q.subtract(BigInteger.ONE));
 
-        int eBitLength = keySizeBits / 2;
+        int eBitLength = 256;
         BigInteger e = generateE(phi, eBitLength);
 
         BigInteger d = e.modInverse(phi);

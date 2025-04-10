@@ -44,18 +44,51 @@ public final class Controller {
   @FXML Button encryptBtn;
   @FXML Button decryptBtn;
 
+  @FXML RadioButton size512;
+  @FXML RadioButton size1024;
+  @FXML RadioButton size2048;
+
   private byte[] unencryptedWindowBuffer;
   private byte[] encryptedWindowBuffer;
   private boolean defaultOutputSelection = true;
 
   private RSAKeyPair keyPair;
+  private int keyBitSize = 512;
+
+  /***
+   Selects the button that is clicked and unselects all others.
+   Updates the wanted keyLength accordingly
+   * @param e event - pressing any of the 3 radio buttons
+   */
+  public void manageSizeButtons(ActionEvent e) {
+    RadioButton[] sizeRadioButtons = {size512, size1024, size2048};
+    RadioButton pressed = (RadioButton) e.getSource();
+
+    switch(pressed.getId()) {
+      case "size512":
+        keyBitSize = 512;
+        break;
+      case "size1024":
+        keyBitSize = 1024;
+        break;
+      case "size2048":
+        keyBitSize = 2048;
+        break;
+    }
+
+    for (RadioButton button: sizeRadioButtons) {
+      if (!button.equals(pressed)) {
+        button.setSelected(false);
+      }
+    }
+  }
 
   /***
    * creates and saves key information based on user selection
    * @param e clicking the 'generate key' button
    */
   public void createKey(ActionEvent e) {
-    keyPair = RSAKeyGenerator.generateKeyPair(512);
+    keyPair = RSAKeyGenerator.generateKeyPair(keyBitSize);
     pubKeyGenField.setText(keyPair.getPublicKey().getE().toString(16));
     privKeyGenField.setText(keyPair.getPrivateKey().getD().toString(16));
     modNKeyField.setText(keyPair.getPublicKey().getN().toString(16));
