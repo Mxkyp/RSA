@@ -87,9 +87,7 @@ public class Utils {
         break;
       }
     }
-    if (index < 0) {
-      throw new Exception("Invalid PKCS#1 padding: no delimiter found");
-    }
+
     int messageLength = padded.length - index - 1;
     byte[] message = new byte[messageLength];
     System.arraycopy(padded, index + 1, message, 0, messageLength);

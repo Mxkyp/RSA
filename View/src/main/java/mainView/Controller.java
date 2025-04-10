@@ -8,6 +8,7 @@ import javafx.stage.FileChooser;
 import main.*;
 
 import java.io.*;
+import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
@@ -70,7 +71,6 @@ public final class Controller {
       usingFilesBtn.setSelected(false);
     }
   }
-
 
   public void encrypt(ActionEvent e) throws Exception {
 
@@ -143,7 +143,7 @@ public final class Controller {
   public void loadKeyFile(ActionEvent e) {
     File keyFile = loadFile(e, "file containing the key");
     if (keyFile != null) {
-      readFromAFile(keyFile, keyLoadArea);
+     readKeys(keyFile);
     }
   }
 
@@ -165,7 +165,7 @@ public final class Controller {
   public void saveKeyFile(ActionEvent e) {
     File keyFile = saveFile(e, "file to contain the key");
     if (keyFile != null) {
-      //writeToFile(keyFile, keySaveArea);
+      writeKeys(keyFile);
     }
   }
 
@@ -213,21 +213,6 @@ public final class Controller {
     alert.showAndWait();
   }
 
-  public void readFromAFile(final File file, TextArea textArea) {
-
-    try (FileInputStream fileInputStream = new FileInputStream(file)) {
-      textArea.clear();
-      byte[] buffer = new byte[1024];
-      int bytesRead;
-      while ((bytesRead = fileInputStream.read(buffer)) != -1) {
-        textArea.appendText(new String(buffer, 0, bytesRead, StandardCharsets.UTF_8));
-      }
-    } catch (IOException ex) {
-      throw new RuntimeException(ex);
-    }
-
-  }
-
   public byte[] readFromAFile(final File file, TextArea textArea, TextField textField) {
     ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream(1024 * 1024 * 100);
 
@@ -250,10 +235,32 @@ public final class Controller {
     return byteArrayOutputStream.toByteArray();
   }
 
-  public void writeToFile(final File file, TextArea textArea) {
-    try (FileOutputStream fileOutputStream = new FileOutputStream(file)) {
-      byte[] data = textArea.getText().getBytes(StandardCharsets.UTF_8);
-      fileOutputStream.write(data);
+  public void writeKeys(final File file) {
+    try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+      writer.write(pubKeyGenField.getText());
+      writer.newLine();
+      writer.write(privKeyGenField.getText());
+      writer.newLine();
+      writer.write(modNKeyField.getText());
+    } catch (FileNotFoundException ex) {
+      throw new RuntimeException(ex);
+    } catch (IOException ex) {
+      throw new RuntimeException(ex);
+    }
+  }
+
+  public void readKeys(final File file) {
+    try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+      String e = reader.readLine();
+      String d = reader.readLine();
+      String n = reader.readLine();
+      RSAPublicKey publicKey = new RSAPublicKey(new BigInteger(n, 16), new BigInteger(e,16));
+      RSAPrivateKey privateKey = new RSAPrivateKey(new BigInteger(n, 16), new BigInteger(d,16));
+      keyPair = new RSAKeyPair(publicKey, privateKey);
+
+      pubKeyGenField.setText(keyPair.getPublicKey().getE().toString(16));
+      privKeyGenField.setText(keyPair.getPrivateKey().getD().toString(16));
+      modNKeyField.setText(keyPair.getPublicKey().getN().toString(16));
     } catch (FileNotFoundException ex) {
       throw new RuntimeException(ex);
     } catch (IOException ex) {
