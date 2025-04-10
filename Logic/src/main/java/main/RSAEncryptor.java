@@ -14,7 +14,6 @@ public class RSAEncryptor {
 
 
   // Example encryption method that takes a block and returns the encrypted block.
-  // This method should internally work with RSA (for example, via BigInteger.modPow()).
   private static byte[] encrypt(byte[] paddedChunk, RSAPublicKey publicKey) throws Exception {
     BigInteger m = new BigInteger(1, paddedChunk);
     BigInteger c = m.modPow(publicKey.getE(), publicKey.getN());
@@ -22,11 +21,20 @@ public class RSAEncryptor {
 
     // Ensure the encrypted byte array has the full key size
     int keyByteSize = (publicKey.getN().bitLength() + 7) / 8;
-    if (encrypted.length < keyByteSize) {
+    if (encrypted.length > keyByteSize) {
+      // Trim leading 0 byte if it exists and causes overflow
+      if (encrypted[0] == 0x00 && encrypted.length == keyByteSize + 1) {
+        encrypted = Arrays.copyOfRange(encrypted, 1, encrypted.length);
+      } else {
+        throw new IllegalStateException("Encrypted block is too large");
+      }
+    } else if (encrypted.length < keyByteSize) {
+      // Pad with leading zeros
       byte[] tmp = new byte[keyByteSize];
       System.arraycopy(encrypted, 0, tmp, keyByteSize - encrypted.length, encrypted.length);
       encrypted = tmp;
     }
+
     return encrypted;
   }
 
